@@ -37,7 +37,7 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
         print(" ]\t", end="")
 
         if i < frame_num:
-            print("\t" * ((frame_num - 1) - i), end="")
+            print("\t" * (frame_num - len(log[i])), end="")
 
         if status_list[i] == 'hit':
             print("📌 HIT\t", end="")
@@ -74,7 +74,10 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
         print("\t-\t|" * i, end="")
         #  loop for each item
         for n in range(i, len(frame_list)):
-            print(f"\t{frame_list[n][i]}\t|", end="")
+            if i < len(frame_list[n]):
+                print(f"\t{frame_list[n][i]}\t|", end="")
+            else:
+                print("\t-\t|", end="")
 
         print("")
 
@@ -118,14 +121,26 @@ def lru_logic(page_list, frame_num):
             list_item = copy.deepcopy(frame_list[i - 1])
 
         # check if i is less than frame_num, so we can append
-        if i < frame_num:
-            list_item.append(page_list[i])
-            temp = {
-                "page": page_list[i],
-                "frame": i,
-                "text": 'placed'
-            }
-            text_log.append(temp)
+        if i < frame_num or len(list_item) != 3:
+            if page_list[i] in list_item:
+                status = "hit"
+                frame = list_item.index(page_list[i])
+                temp = {
+                    "page": page_list[i],
+                    "frame": frame,
+                    "text": 'found'
+                }
+                text_log.append(temp)
+                order = arrival_order.pop(0)
+                arrival_order.append(order)
+            else:
+                list_item.append(page_list[i])
+                temp = {
+                    "page": page_list[i],
+                    "frame": i,
+                    "text": 'placed'
+                }
+                text_log.append(temp)
 
         else:
             for n in range(len(list_item)):
@@ -169,7 +184,7 @@ def lru_logic(page_list, frame_num):
 
 def main():
     #  page_list, frame_num = get_input()
-    page_list = [7, 0, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
+    page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
     frame_num = 3
 
     frame_list, status_list, log, text_log = lru_logic(page_list, frame_num)

@@ -36,7 +36,7 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
         print(" ]\t", end="")
 
         if i < frame_num:
-            print("\t" * ((frame_num - 1) - i), end="")
+            print("\t" * (frame_num - len(log[i])), end="")
 
         if status_list[i] == 'hit':
             print("📌 HIT\t", end="")
