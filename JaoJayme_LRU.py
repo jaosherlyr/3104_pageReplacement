@@ -5,6 +5,7 @@
 #  ======================================================================
 import copy
 
+
 def get_input():
     page_list = []
 
@@ -46,7 +47,8 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
         if text_log[i]['text'] != 'replaced':
             print(f"\tPage {text_log[i]['page']} {text_log[i]['text']} in Frame {text_log[i]['frame'] + 1}")
         else:
-            print(f"\tPage {text_log[i]['page']} {text_log[i]['text']} Page {text_log[i]['replaced']} in Frame {text_log[i]['frame'] + 1}")
+            print(
+                f"\tPage {text_log[i]['page']} {text_log[i]['text']} Page {text_log[i]['replaced']} in Frame {text_log[i]['frame'] + 1}")
 
     #  memory stata Visualization
     print("\n> Memory State Visualization")
