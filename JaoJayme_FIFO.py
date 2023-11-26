@@ -5,8 +5,6 @@
 #  ======================================================================
 import copy
 
-
-#  Accept input for page items and frame list
 def get_input():
     page_list = []
 
@@ -41,9 +39,9 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
             print("\t" * ((frame_num - 1) - i), end="")
 
         if status_list[i] == 'hit':
-            print("HIT\t", end="")
+            print("📌 HIT\t", end="")
         else:
-            print("FAULT", end="")
+            print("🙅‍ FAULT", end="")
 
         if text_log[i]['text'] != 'replaced':
             print(f"\tPage {text_log[i]['page']} {text_log[i]['text']} in Frame {text_log[i]['frame'] + 1}")
