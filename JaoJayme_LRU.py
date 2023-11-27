@@ -31,13 +31,13 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
     print(f"Legend: [Item]: [State| Least Recently Used <-- Most Recently Used] [Status] [Log]")
     for i in range(len(page_list)):
         print(f"{i + 1}:\t\t[ ", end="")
-        for n in range(len(log[i])):
-            print(f" {log[i][n]} ", end="")
+        for n in range(frame_num):
+            if n < len(log[i]):
+                print(f" {log[i][n]} ", end="")
+            else:
+                print(" - ", end="")
 
         print(" ]\t", end="")
-
-        if i < frame_num:
-            print("\t" * (frame_num - len(log[i])), end="")
 
         if status_list[i] == 'hit':
             print("📌 HIT\t", end="")
@@ -121,7 +121,7 @@ def lru_logic(page_list, frame_num):
             list_item = copy.deepcopy(frame_list[i - 1])
 
         # check if i is less than frame_num, so we can append
-        if i < frame_num or len(list_item) != 3:
+        if i < frame_num or len(list_item) < frame_num:
             if page_list[i] in list_item:
                 status = "hit"
                 frame = list_item.index(page_list[i])
@@ -185,7 +185,7 @@ def lru_logic(page_list, frame_num):
 def main():
     #  page_list, frame_num = get_input()
     page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
-    frame_num = 3
+    frame_num = 8
 
     frame_list, status_list, log, text_log = lru_logic(page_list, frame_num)
     display(page_list, frame_list, status_list, frame_num, log, text_log)

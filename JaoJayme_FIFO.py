@@ -5,6 +5,7 @@
 #  ======================================================================
 import copy
 
+
 def get_input():
     page_list = []
 
@@ -30,13 +31,13 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
     print(f"Legend: [Item]: [State| Oldest in Memory <-- Newest in Memory] [Status] [Log]")
     for i in range(len(page_list)):
         print(f"{i + 1}:\t\t[ ", end="")
-        for n in range(len(log[i])):
-            print(f" {log[i][n]} ", end="")
+        for n in range(frame_num):
+            if n < len(log[i]):
+                print(f" {log[i][n]} ", end="")
+            else:
+                print(" - ", end="")
 
         print(" ]\t", end="")
-
-        if i < frame_num:
-            print("\t" * (frame_num - len(log[i])), end="")
 
         if status_list[i] == 'hit':
             print("📌 HIT\t", end="")
@@ -46,7 +47,8 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
         if text_log[i]['text'] != 'replaced':
             print(f"\tPage {text_log[i]['page']} {text_log[i]['text']} in Frame {text_log[i]['frame'] + 1}")
         else:
-            print(f"\tPage {text_log[i]['page']} {text_log[i]['text']} Page {text_log[i]['replaced']} in Frame {text_log[i]['frame'] + 1}")
+            print(
+                f"\tPage {text_log[i]['page']} {text_log[i]['text']} Page {text_log[i]['replaced']} in Frame {text_log[i]['frame'] + 1}")
 
     #  memory stata Visualization
     print("\n> Memory State Visualization")
@@ -119,7 +121,7 @@ def fifo_logic(page_list, frame_num):
             list_item = copy.deepcopy(frame_list[i - 1])
 
         # check if i is less than frame_num, so we can append
-        if i < frame_num or len(list_item) != 3:
+        if i < frame_num or len(list_item) < frame_num:
             if page_list[i] in list_item:
                 status = "hit"
                 frame = list_item.index(page_list[i])
