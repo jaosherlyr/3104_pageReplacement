@@ -26,6 +26,16 @@ def get_input():
 def display(page_list, frame_list, status_list, frame_num, log, text_log):
     print("===== Memory Management Simulator [LRU - Least Recently Used] =====\n")
 
+    #  print details
+    print("> Details")
+    print("Pages: [ ", end="")
+    for i in range(len(page_list)):
+        print(f"{page_list[i]}", end="")
+        if i < len(page_list) - 1:
+            print(", ", end="")
+    print(" ]")
+    print(f"Frames: [ {frame_num} ]\n")
+
     #  Page replacement Log
     print("> Page Replacement Log")
     print(f"Legend: [Item]: [State| Least Recently Used <-- Most Recently Used] [Status] [Log]")
