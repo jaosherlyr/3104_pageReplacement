@@ -18,28 +18,41 @@ def get_input():
     frame_num = int(input("\nEnter number of frames: "))
 
     return page_list, frame_num
-
 def display(page_list, frame_list, status_list, frame_num, log, text_log):
     print("===== Memory Management Simulator [Optimal Page Replacement Algorithm] =====\n")
 
     # Page replacement Log
     print("\n> Page Replacement Log")
-    print("page length",len(page_list) * "=====")
-    print(f"Legend: \t [page reference] \t \t [Status] \t \t [Log]")
+    print(f"Legend: \t [page reference] [| about to be replaced] [ < most optimal number to replace] \t\t [Frame summary] \t \t [Status] \t \t [Log]")
     for i in range(len(page_list)):
         print(f"{i + 1}:\t\t\t", end="")
 
-        print(page_list[i],end="")
-       
+        # Check if the next number is about to be replaced and display "|" accordingly
+        for j, frame_content in enumerate(frame_list[i]):
+            if j == 0:
+                next_to_replace = frame_list[i + 1][0] if i + 1 < len(frame_list) else None
+                print(f"[{frame_content}|", end="") if frame_content != next_to_replace else print(f"[{frame_content}-", end="")
+            elif j == frame_num - 1:
+                print(f"{frame_content}] ", end="")
+            else:
+                print(f"{frame_content}|", end="")
+
+        # Display the optimal replacement indication
+        if i < len(page_list) - 1:
+            optimal_replacement = frame_list[i + 1][0]
+            print(f"< [{optimal_replacement}] ", end="")
+
         if status_list[i] == 'hit':
             print("\t\t \t 📌 HIT", end="")
         else:
             print("\t\t \t 🙅‍ FAULT", end="")
 
         if text_log[i]['text'] != 'replaced':
-            print(f"\t \tPage{text_log[i]['page']} {text_log[i]['text']} in Frame {text_log[i]['frame'] + 1} Hello")
+            print(f"\t \tPage{text_log[i]['page']} {text_log[i]['text']} in Frame {text_log[i]['frame'] + 1}")
         else:
             print(f"\tPage{text_log[i]['page']} {text_log[i]['text']} Page {text_log[i]['replaced']} in Frame {text_log[i]['frame'] + 1}")
+
+
 
     # Memory State Visualization
     print("\n> Memory State Visualization")
@@ -59,10 +72,11 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
 
     print("\n\t\t\t+", end="")
     print("-------+" * len(page_list))
+
     #  loop for each frame
     for i in range(frame_num):
         print(f"Frame {i + 1}:\t|", end="")
-        print("\t-\t|" * i, end="")
+        print("\t - \t|" * i, end="")
         #  loop for each item
         for n in range(i, len(frame_list)):
             if i < len(frame_list[n]):
@@ -93,7 +107,7 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
 
 
 def optimal_algorithm(page_list, frame_num):
-    fr = [1] * frame_num
+    fr = ["-"] * frame_num
     frame_list = []
     status_list = []
     log = []
@@ -128,7 +142,7 @@ def optimal_algorithm(page_list, frame_num):
             continue
 
         farthest = -1
-        replaceIndex = -1
+        replaceIndex = 0
         for j in range(frame_num):
             k = i + 1
             while(k < len(page_list)):
