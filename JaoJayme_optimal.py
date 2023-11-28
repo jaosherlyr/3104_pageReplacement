@@ -35,7 +35,7 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
             elif j == frame_num - 1:
                 print(f"{frame_content}] ", end="")
             else:
-                print(f"{frame_content}|", end="")
+                print(f"{frame_content}", end="")
 
         # Display the optimal replacement indication
         if i < len(page_list) - 1:
