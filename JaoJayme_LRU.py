@@ -24,7 +24,7 @@ def get_input():
 
 #  Display
 def display(page_list, frame_list, status_list, frame_num, log, text_log):
-    print("===== Memory Management Simulator [LRU - Least Recently Used] =====\n")
+    print("\n===== Memory Management Simulator [LRU - Least Recently Used] =====\n")
 
     #  print details
     print("> Details")
@@ -193,9 +193,9 @@ def lru_logic(page_list, frame_num):
 
 
 def main():
-    #  page_list, frame_num = get_input()
-    page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
-    frame_num = 8
+    page_list, frame_num = get_input()
+    # page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
+    # frame_num = 8
 
     frame_list, status_list, log, text_log = lru_logic(page_list, frame_num)
     display(page_list, frame_list, status_list, frame_num, log, text_log)
