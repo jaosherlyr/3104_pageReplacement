@@ -18,20 +18,20 @@ def get_input():
     frame_num = int(input("\nEnter number of frames: "))
 
     return page_list, frame_num
+# Page replacement Log
 def display(page_list, frame_list, status_list, frame_num, log, text_log):
     print("===== Memory Management Simulator [Optimal Page Replacement Algorithm] =====\n")
 
-    # Page replacement Log
+    
     print("\n> Page Replacement Log")
-    print(f"Legend: \t [page reference] [| about to be replaced] [ < most optimal number to replace] \t\t [Frame summary] \t \t [Status] \t \t [Log]")
+    print(f"Legend: \t [page reference] \t\t [Frame summary] \t \t [Status] \t \t [Log]")
     for i in range(len(page_list)):
         print(f"{i + 1}:\t\t\t", end="")
 
-        # Check if the next number is about to be replaced and display "|" accordingly
         for j, frame_content in enumerate(frame_list[i]):
             if j == 0:
                 next_to_replace = frame_list[i + 1][0] if i + 1 < len(frame_list) else None
-                print(f"[{frame_content}|", end="") if frame_content != next_to_replace else print(f"[{frame_content}-", end="")
+                print(f"[{frame_content}", end="") if frame_content != next_to_replace else print(f"[{frame_content}", end="")
             elif j == frame_num - 1:
                 print(f"{frame_content}] ", end="")
             else:
@@ -75,14 +75,14 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
 
     #  loop for each frame
     for i in range(frame_num):
-        print(f"Frame {i + 1}:\t|", end="")
-        print("\t - \t|" * i, end="")
+        print(f"Frame {i + 1}:\t", end="")
+        print("\t - \t" * i, end="")
         #  loop for each item
         for n in range(i, len(frame_list)):
             if i < len(frame_list[n]):
-                print(f"\t{frame_list[n][i]}\t|", end="")
+                print(f"\t{frame_list[n][i]}\t", end="")
             else:
-                print("\t-\t|", end="")
+                print("\t-\t", end="")
 
         print("")
 
@@ -105,15 +105,14 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
     print(f"HIT ratio:\t\t[\t{hit_count / len(page_list) * 100 :.2f}%\t]", end="")
     print(f"\t\tFAULT ratio:\t\t[\t{fault_count / len(page_list) * 100 :.2f}%\t]")
 
-
 def optimal_algorithm(page_list, frame_num):
-    fr = ["-"] * frame_num
+    fr = ["-"] * frame_num  # Use "-" to represent an empty frame
     frame_list = []
     status_list = []
     log = []
     text_log = []
-
     hit = 0
+    
     for i in range(len(page_list)):
         found = False
         for j in range(frame_num):
@@ -130,7 +129,7 @@ def optimal_algorithm(page_list, frame_num):
 
         emptyFrame = False
         for j in range(frame_num):
-            if fr[j] == -1:
+            if fr[j] == "-":  # Check for an empty frame represented by "-"
                 fr[j] = page_list[i]
                 emptyFrame = True
                 break
@@ -145,7 +144,7 @@ def optimal_algorithm(page_list, frame_num):
         replaceIndex = 0
         for j in range(frame_num):
             k = i + 1
-            while(k < len(page_list)):
+            while k < len(page_list):
                 if fr[j] == page_list[k]:
                     if k > farthest:
                         farthest = k
@@ -156,7 +155,9 @@ def optimal_algorithm(page_list, frame_num):
                 replaceIndex = j
                 break
 
-        fr[replaceIndex] = page_list[i]
+        if fr[replaceIndex] != page_list[i]:
+            
+            fr[replaceIndex] = page_list[i]
         status_list.append('fault')
         frame_list.append(fr.copy())
         text_log.append({'text': 'replaced', 'page': page_list[i], 'replaced': fr[replaceIndex], 'frame': replaceIndex})
@@ -164,10 +165,14 @@ def optimal_algorithm(page_list, frame_num):
     return frame_list, status_list, log, text_log
 
 
+
+
 def main():
 # Example usage
     # page_list, frame_num = get_input()
-    page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
+    # page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
+    # page_list = [3, 2, 1, 3, 3, 7, 4, 10, 7, 9, 7, 3, 1, 7, 6, 6, 4]
+    page_list = [7,0,1,2,0,3,4,2,3,0,3,2,1,2,0,1,7]
     frame_num = 3
 
     frame_list, status_list, log, text_log = optimal_algorithm(page_list, frame_num)
