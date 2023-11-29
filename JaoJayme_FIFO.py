@@ -38,7 +38,7 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
 
     #  Page replacement Log
     print("> Page Replacement Log")
-    print(f"Legend: [Item]: [State| Oldest in Memory <-- Newest in Memory] [Status] [Log]")
+    print(f"Legend: [Item]: [State| [Oldest in Memory <-- Newest in Memory] [Status] [Log]")
     for i in range(len(page_list)):
         print(f"{i + 1}:\t\t[ ", end="")
         for n in range(frame_num):
@@ -189,9 +189,9 @@ def fifo_logic(page_list, frame_num):
 
 
 def main():
-    page_list, frame_num = get_input()
-    # page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
-    # frame_num = 3
+    # page_list, frame_num = get_input()
+    page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
+    frame_num = 3
 
     frame_list, status_list, log, text_log = fifo_logic(page_list, frame_num)
     display(page_list, frame_list, status_list, frame_num, log, text_log)

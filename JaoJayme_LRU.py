@@ -38,7 +38,7 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
 
     #  Page replacement Log
     print("> Page Replacement Log")
-    print(f"Legend: [Item]: [State| Least Recently Used <-- Most Recently Used] [Status] [Log]")
+    print(f"Legend: [Item]: [State| [Least Recently Used <-- Most Recently Used] [Status] [Log]")
     for i in range(len(page_list)):
         print(f"{i + 1}:\t\t[ ", end="")
         for n in range(frame_num):

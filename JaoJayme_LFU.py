@@ -23,7 +23,7 @@ def get_input():
 
 
 #  Display
-def display(page_list, frame_list, status_list, frame_num, log, text_log):
+def display(page_list, frame_list, status_list, frame_num, order_log, text_list, frequency_list):
     print("\n===== Memory Management Simulator [LFU - Least Frequently Used] =====\n")
 
     #  print details
@@ -38,14 +38,14 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
 
     #  Page replacement Log
     print("> Page Replacement Log")
-    print(f"Legend: [Item]: [State| Least Frequently Used <-- Most Frequently Used] [Status] [Log]")
+    print(f"Legend: [Item]: [State| [[Page : Frequency] ...] [Status] [Log]")
     for i in range(len(page_list)):
         print(f"{i + 1}:\t\t[ ", end="")
         for n in range(frame_num):
-            if n < len(log[i]):
-                print(f" {log[i][n]} ", end="")
+            if n < len(order_log[i]):
+                print(f" [{order_log[i][n]} : {frequency_list[i][n]}] ", end="")
             else:
-                print(" - ", end="")
+                print(" [- : -] ", end="")
 
         print(" ]\t", end="")
 
@@ -54,11 +54,11 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
         else:
             print("🙅‍ FAULT", end="")
 
-        if text_log[i]['text'] != 'replaced':
-            print(f"\tPage {text_log[i]['page']} {text_log[i]['text']} in Frame {text_log[i]['frame'] + 1}")
+        if text_list[i]['text'] != 'replaced':
+            print(f"\tPage {text_list[i]['page']} {text_list[i]['text']} in Frame {text_list[i]['frame'] + 1}")
         else:
             print(
-                f"\tPage {text_log[i]['page']} {text_log[i]['text']} Page {text_log[i]['replaced']} in Frame {text_log[i]['frame'] + 1}")
+                f"\tPage {text_list[i]['page']} {text_list[i]['text']} Page {text_list[i]['replaced']} in Frame {text_list[i]['frame'] + 1}")
 
     #  memory stata Visualization
     print("\n> Memory State Visualization")
@@ -115,37 +115,93 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
 
 def lfu_logic(page_list, frame_num):
     frame_list = []
-    list_item = []
+    frequency_list = []
+    text_list = []
+    status_list = []
+    order_log = []
+    optimal_list = []
+
+    frame_item = []
+    frequency_item = []
+
     order = []
-    text_log = []
+    replaced = 0
 
     for i in range(len(page_list)):
         status = "fault"
+        if_replace = False
+        is_hit = False
 
         if i != 0:
-            list_item = copy.deepcopy(frame_list[i - 1])
+            frame_item = copy.deepcopy(frame_list[i - 1])
+            frequency_item = copy.deepcopy(frequency_list[i -1])
+            order = copy.deepcopy(order_log[i - 1])
 
-        if page_list[i] in list_item:
+        if page_list[i] in frame_item:
             status = "hit"
-            frame = list_item.index(page_list[i])
-            temp = {
+            frame = frame_item.index(page_list[i])
+            text = "found"
+            # index = order.index(page_list[i])
+            is_hit = True
+            frequency_item[frame] += 1
+        elif i < frame_num or len(frame_item) < frame_num:
+            text = "placed"
+            frame = 0 if i == 0 else len(frame_item)
+            frequency_item.append(1)
+            frame_item.append(page_list[i])
+        else:
+            freq_dict = {}
+
+            for item, freq in zip(frame_item, frequency_item):
+                freq_dict[item] = freq
+
+            min_freq = min(freq_dict.values())
+            min_freq_items = [item for item, freq in freq_dict.items() if freq == min_freq]
+            replaced_page = min(min_freq_items, key=lambda x: order.index(x))
+
+            text = "replaced"
+            frame = frame_item.index(replaced_page)
+            replaced = replaced_page
+            if_replace = True
+
+            frame_item[frame] = page_list[i]
+            frequency_item[frame] = 1
+
+            index = order.index(replaced_page)
+            order.pop(index)
+
+        if not if_replace:
+            text_item = {
                 "page": page_list[i],
-                "frame": frame,
-                "text": 'found'
+                "text": text,
+                "frame": frame
             }
-            text_log.append(temp)
+        else:
+            text_item = {
+                "page": page_list[i],
+                "text": text,
+                "frame": frame,
+                "replaced": replaced
+            }
 
+        text_list.append(text_item)
+        if not is_hit:
+            order.append(page_list[i])
+        order_log.append(order)
+        frame_list.append(frame_item)
+        status_list.append(status)
+        frequency_list.append(frequency_item)
 
-    return frame_list, status_list, log, text_log
+    return frame_list, status_list, order_log, text_list, frequency_list
 
 
 def main():
     # page_list, frame_num = get_input()
     page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
-    frame_num = 8
+    frame_num = 3
 
-    frame_list, status_list, log, text_log = lfu_logic(page_list, frame_num)
-    display(page_list, frame_list, status_list, frame_num, log, text_log)
+    frame_list, status_list, order_log, text_list, frequency_list = lfu_logic(page_list, frame_num)
+    display(page_list, frame_list, status_list, frame_num, order_log, text_list, frequency_list)
 
 
 if __name__ == "__main__":
