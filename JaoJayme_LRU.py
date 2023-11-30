@@ -114,88 +114,73 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
 
 
 def lru_logic(page_list, frame_num):
-    list_item = []
     frame_list = []
+    text_list = []
     status_list = []
-    arrival_order = []
-    log = []
-    text_log = []
-    frame = 0
+    order_log = []
 
-    #  loop through the items
+    frame_item = []
+
+    order = []
+    replaced = 0
+
     for i in range(len(page_list)):
         status = "fault"
+        if_replace = False
+        is_hit = False
 
-        #  check if i is not the first iteration, so we can copy the previous
         if i != 0:
-            list_item = copy.deepcopy(frame_list[i - 1])
+            frame_item = copy.deepcopy(frame_list[i - 1])
+            order = copy.deepcopy(order_log[i - 1])
 
-        # check if i is less than frame_num, so we can append
-        if i < frame_num or len(list_item) < frame_num:
-            if page_list[i] in list_item:
-                status = "hit"
-                frame = list_item.index(page_list[i])
-                temp = {
-                    "page": page_list[i],
-                    "frame": frame,
-                    "text": 'found'
-                }
-                text_log.append(temp)
-                order = arrival_order.pop(0)
-                arrival_order.append(order)
-            else:
-                list_item.append(page_list[i])
-                temp = {
-                    "page": page_list[i],
-                    "frame": i,
-                    "text": 'placed'
-                }
-                text_log.append(temp)
-
+        if page_list[i] in frame_item:
+            status = "hit"
+            frame = frame_item.index(page_list[i])
+            text = "found"
+            is_hit = True
+            index = order.index(page_list[i])
+            order.pop(index)
+        elif i < frame_num or len(frame_item) < frame_num:
+            text = "placed"
+            frame = 0 if i == 0 else len(frame_item)
+            frame_item.append(page_list[i])
         else:
-            for n in range(len(list_item)):
-                if page_list[i] == list_item[n]:
-                    status = "hit"
-                    temp = {
-                        "page": page_list[i],
-                        "frame": n,
-                        "text": 'found'
-                    }
-                    text_log.append(temp)
-                    order = arrival_order.pop(0)
-                    arrival_order.append(order)
+            replaced_page = order.pop(0)
 
-            if status != "hit":
-                first = arrival_order.pop(0)
+            text = "replaced"
+            frame = frame_item.index(replaced_page)
+            replaced = replaced_page
+            if_replace = True
 
-                for n in range(len(list_item)):
-                    if first == list_item[n]:
-                        list_item[n] = page_list[i]
-                        frame = n
+            frame_item[frame] = page_list[i]
 
-                temp = {
-                    "page": page_list[i],
-                    "frame": frame,
-                    "text": 'replaced',
-                    "replaced": first
-                }
-                text_log.append(temp)
+        if not if_replace:
+            text_item = {
+                "page": page_list[i],
+                "text": text,
+                "frame": frame
+            }
+        else:
+            text_item = {
+                "page": page_list[i],
+                "text": text,
+                "frame": frame,
+                "replaced": replaced
+            }
 
-        if status != "hit":
-            arrival_order.append(page_list[i])
-
-        log_item = copy.deepcopy(arrival_order)
-        log.append(log_item)
-        frame_list.append(list_item)
+        text_list.append(text_item)
+        order.append(page_list[i])
+        order_log.append(order)
+        frame_list.append(frame_item)
         status_list.append(status)
 
-    return frame_list, status_list, log, text_log
+    return frame_list, status_list, order_log, text_list
 
 
 def main():
-    page_list, frame_num = get_input()
-    # page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
-    # frame_num = 8
+    # page_list, frame_num = get_input()
+    page_list = [5, 6, 7, 6, 5, 4, 5, 6, 4, 3, 2, 3, 5, 6, 5, 6, 7, 5, 4, 3]
+    frame_num = 3
 
     frame_list, status_list, log, text_log = lru_logic(page_list, frame_num)
     display(page_list, frame_list, status_list, frame_num, log, text_log)
