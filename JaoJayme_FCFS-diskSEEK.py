@@ -1,35 +1,38 @@
 import matplotlib.pyplot as plt
 
-size = 8
-
-def FCFS(arr, head):
-    seek_C = 0
+def FCFS(request, initial_head):
+    size = len(request)
+    seek_count = 0
     distance, curr_track = 0, 0
+    seek_sequence = []
 
     for i in range(size):
-        curr_track = arr[i]
-        distance = abs(curr_track - head)
-        seek_C += distance
+        curr_track = request[i]
+        distance = abs(curr_track - initial_head)
+        seek_count += distance
+        seek_sequence.append(curr_track)
 
-    print(f"Total number of seek operations = ", seek_C)
-    print("Seek Sequence is")
+    print("Total number of seek operations =", seek_count)
+    print("Seek Sequence is", seek_sequence)
 
-    for i in range(size):
-        print(arr[i])
+    return seek_sequence
 
-def plotting(arr):
-    plt.title("DISK SEEK-FCFS")
-    plt.plot(arr, 'ro-', label= arr)
+def plotting(seek_sequence, algorithm_name):
+    plt.title(algorithm_name)
+    plt.plot(seek_sequence, 'ro-', label= seek_sequence)
     plt.ylabel('Track Number')
     plt.xlabel('Seek Sequence Order')
     plt.legend()
     plt.show()
 
-# Driver code
-if __name__ == '__main__':
-    # request array
-    arr = [176, 79, 34, 60, 92, 11, 41, 114]
-    head = 50
+# User input for request array
+request_array_fcfs = list(map(int, input("Enter the request array (comma-separated): ").split(',')))
 
-    FCFS(arr, head)
-    plotting(arr)
+# User input for initial head position
+initial_head_position_fcfs = int(input("Enter the initial head position: "))
+
+# Run FCFS algorithm
+seek_sequence_fcfs = FCFS(request_array_fcfs, initial_head_position_fcfs)
+
+# Plot the seek sequence
+plotting(seek_sequence_fcfs, "FCFS")

@@ -54,8 +54,7 @@ def plotting(seek_sequence):
     plt.show()
 
 # Driver code
-arr = [ 176, 79, 34, 60,
-         92, 11, 41, 114 ]
+arr = []
 head = 50
 
 # Call CSCAN and get the seek sequence

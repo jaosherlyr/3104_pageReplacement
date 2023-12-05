@@ -7,31 +7,31 @@ def C_LOOK(arr, head):
     right = []
     seek_sequence = []
 
-    # Sort the request array
-    arr.sort()
+    # Tracks on the left of the head will be serviced
+    # once the head comes back to the beginning (left end)
+    for track in arr:
+        if track < head:
+            left.append(track)
+        if track > head:
+            right.append(track)
 
-    # Split the requests into left and right based on the head
-    left = [track for track in arr if track < head]
-    right = [track for track in arr if track >= head]
-
-    # Sort left and right arrays
+    # Sorting left and right vectors
     left.sort()
     right.sort()
 
-    # Service requests in the right direction
-    for i in range(len(right)):
-        cur_track = right[i]
+    # Service requests on the right side of the head
+    for cur_track in right:
         seek_sequence.append(cur_track)
         distance = abs(cur_track - head)
         seek_count += distance
         head = cur_track
 
-    # Jump to the beginning of the disk and service requests in the left direction
-    head = 0
-    seek_count += (right[-1] - head)
-    
-    for i in range(len(left)):
-        cur_track = left[i]
+    # Jump to the last track that needs to be serviced in the left direction
+    seek_count += abs(head - left[0])
+    head = left[0]
+
+    # Service requests again on the left
+    for cur_track in left:
         seek_sequence.append(cur_track)
         distance = abs(cur_track - head)
         seek_count += distance
@@ -43,17 +43,24 @@ def C_LOOK(arr, head):
     return seek_sequence
 
 def plotting(seek_sequence):
-    plt.plot(seek_sequence, 'ro-',label= seek_sequence)
-    plt.plot(seek_sequence)
-    plt.title("LOOK Algorithm")
+    plt.plot(seek_sequence, 'ro-', label="C-LOOK Seek Sequence")
+    plt.title("C LOOK Algorithm")
     plt.ylabel('Track Number')
     plt.xlabel('Seek Sequence Order')
     plt.legend()
     plt.show()
 
-# Driver code
-arr = [176, 79, 34, 60, 92, 11, 41, 114]
-head = 50
+# User input for size and disk size
+size = int(input("Enter the size of the request array: "))
+disk_size = int(input("Enter the disk size: "))
+
+# User input for the request array
+arr = []
+for i in range(size):
+    track = int(input(f"Enter track {i + 1} of the request array: "))
+    arr.append(track)
+
+head = int(input("Enter the initial head position: "))
 
 seek_sequence = C_LOOK(arr, head)
 plotting(seek_sequence)
