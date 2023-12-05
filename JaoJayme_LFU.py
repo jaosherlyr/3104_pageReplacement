@@ -119,7 +119,6 @@ def lfu_logic(page_list, frame_num):
     text_list = []
     status_list = []
     order_log = []
-    optimal_list = []
 
     frame_item = []
     frequency_item = []
@@ -141,7 +140,6 @@ def lfu_logic(page_list, frame_num):
             status = "hit"
             frame = frame_item.index(page_list[i])
             text = "found"
-            # index = order.index(page_list[i])
             is_hit = True
             frequency_item[frame] += 1
         elif i < frame_num or len(frame_item) < frame_num:
@@ -197,7 +195,7 @@ def lfu_logic(page_list, frame_num):
 
 def main():
     # page_list, frame_num = get_input()
-    page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
+    page_list = [5, 6, 7, 6, 5, 4, 5, 6, 4, 3, 2, 3, 5, 6, 5, 6, 7, 5, 4, 3]
     frame_num = 3
 
     frame_list, status_list, order_log, text_list, frequency_list = lfu_logic(page_list, frame_num)

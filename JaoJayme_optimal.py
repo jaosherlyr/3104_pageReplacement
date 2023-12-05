@@ -24,31 +24,31 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
 
     
     print("\n> Page Replacement Log")
-    print(f"Legend: \t [page reference] \t\t [Frame summary] \t \t [Status] \t \t [Log]")
+    print(f"Legend: [Item]: [State| [[Pages] < [Most Optimal]] [Status] [Log]")
     for i in range(len(page_list)):
         print(f"{i + 1}:\t\t\t", end="")
 
         for j, frame_content in enumerate(frame_list[i]):
             if j == 0:
                 next_to_replace = frame_list[i + 1][0] if i + 1 < len(frame_list) else None
-                print(f"[{frame_content}", end="") if frame_content != next_to_replace else print(f"[{frame_content}", end="")
+                print(f"[ {frame_content} ", end="") if frame_content != next_to_replace else print(f"[ {frame_content} ", end="")
             elif j == frame_num - 1:
-                print(f"{frame_content}] ", end="")
+                print(f"{frame_content} ] ", end="")
             else:
-                print(f"{frame_content}", end="")
+                print(f"{frame_content} ", end="")
 
         # Display the optimal replacement indication
         if i < len(page_list) - 1:
             optimal_replacement = frame_list[i + 1][0]
-            print(f"< [{optimal_replacement}] ", end="")
+            print(f"< [ {optimal_replacement} ] ", end="")
 
         if status_list[i] == 'hit':
-            print("\t\t \t 📌 HIT", end="")
+            print("\t📌 HIT\t", end="")
         else:
-            print("\t\t \t 🙅‍ FAULT", end="")
+            print("\t🙅‍ FAULT", end="")
 
         if text_log[i]['text'] != 'replaced':
-            print(f"\t \tPage{text_log[i]['page']} {text_log[i]['text']} in Frame {text_log[i]['frame'] + 1}")
+            print(f"\tPage{text_log[i]['page']} {text_log[i]['text']} in Frame {text_log[i]['frame'] + 1}")
         else:
             print(f"\tPage{text_log[i]['page']} {text_log[i]['text']} Page {text_log[i]['replaced']} in Frame {text_log[i]['frame'] + 1}")
 
@@ -75,14 +75,14 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
 
     #  loop for each frame
     for i in range(frame_num):
-        print(f"Frame {i + 1}:\t", end="")
-        print("\t - \t" * i, end="")
+        print(f"Frame {i + 1}:\t|", end="")
+        print("\t-\t|" * i, end="")
         #  loop for each item
         for n in range(i, len(frame_list)):
             if i < len(frame_list[n]):
-                print(f"\t{frame_list[n][i]}\t", end="")
+                print(f"\t{frame_list[n][i]}\t|", end="")
             else:
-                print("\t-\t", end="")
+                print("\t-\t|", end="")
 
         print("")
 
@@ -174,6 +174,8 @@ def main():
     # page_list = [3, 2, 1, 3, 3, 7, 4, 10, 7, 9, 7, 3, 1, 7, 6, 6, 4]
     # page_list = [7,0,1,2,0,3,4,2,3,0,3,2,1,2,0,1,7]
     # frame_num = 3
+    page_list = [5, 6, 7, 5, 4, 3, 5, 2, 1, 9, 8, 7, 9, 6, 5, 4, 5, 6, 3, 3, 5, 6, 7, 8]
+    frame_num = 5
 
     frame_list, status_list, log, text_log = optimal_algorithm(page_list, frame_num)
     display(page_list, frame_list, status_list, frame_num, log, text_log)

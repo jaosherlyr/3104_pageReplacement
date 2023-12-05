@@ -55,10 +55,10 @@ def display(page_list, frame_list, status_list, frame_num, log, text_log):
             print("🙅‍ FAULT", end="")
 
         if text_log[i]['text'] != 'replaced':
-            print(f"\tPage {text_log[i]['page']} {text_log[i]['text']} in Frame {text_log[i]['frame'] + 1}")
+            print(f"\tPage {text_log[i]['page']} {text_log[i]['text']} in Frame {text_log[i]['frame']}")
         else:
             print(
-                f"\tPage {text_log[i]['page']} {text_log[i]['text']} Page {text_log[i]['replaced']} in Frame {text_log[i]['frame'] + 1}")
+                f"\tPage {text_log[i]['page']} {text_log[i]['text']} Page {text_log[i]['replaced']} in Frame {text_log[i]['frame']}")
 
     #  memory stata Visualization
     print("\n> Memory State Visualization")
@@ -137,7 +137,7 @@ def fifo_logic(page_list, frame_num):
                 frame = list_item.index(page_list[i])
                 temp = {
                     "page": page_list[i],
-                    "frame": frame,
+                    "frame": frame + 1,
                     "text": 'found'
                 }
                 text_log.append(temp)
@@ -145,7 +145,7 @@ def fifo_logic(page_list, frame_num):
                 list_item.append(page_list[i])
                 temp = {
                     "page": page_list[i],
-                    "frame": i,
+                    "frame": len(list_item),
                     "text": 'placed'
                 }
                 text_log.append(temp)
@@ -171,7 +171,7 @@ def fifo_logic(page_list, frame_num):
 
                 temp = {
                     "page": page_list[i],
-                    "frame": frame,
+                    "frame": frame + 1,
                     "text": 'replaced',
                     "replaced": first
                 }
@@ -190,7 +190,7 @@ def fifo_logic(page_list, frame_num):
 
 def main():
     # page_list, frame_num = get_input()
-    page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
+    page_list = [5, 6, 7, 6, 5, 4, 5, 6, 4, 3, 2, 3, 5, 6, 5, 6, 7, 5, 4, 3]
     frame_num = 3
 
     frame_list, status_list, log, text_log = fifo_logic(page_list, frame_num)
