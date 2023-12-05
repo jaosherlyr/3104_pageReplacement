@@ -169,11 +169,11 @@ def optimal_algorithm(page_list, frame_num):
 
 def main():
 # Example usage
-    # page_list, frame_num = get_input()
+    page_list, frame_num = get_input()
     # page_list = [7, 7, 1, 2, 0, 3, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
     # page_list = [3, 2, 1, 3, 3, 7, 4, 10, 7, 9, 7, 3, 1, 7, 6, 6, 4]
-    page_list = [7,0,1,2,0,3,4,2,3,0,3,2,1,2,0,1,7]
-    frame_num = 3
+    # page_list = [7,0,1,2,0,3,4,2,3,0,3,2,1,2,0,1,7]
+    # frame_num = 3
 
     frame_list, status_list, log, text_log = optimal_algorithm(page_list, frame_num)
     display(page_list, frame_list, status_list, frame_num, log, text_log)
